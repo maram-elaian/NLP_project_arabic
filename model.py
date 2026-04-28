@@ -36,3 +36,4 @@ print(confusion_matrix(y_test, y_pred))
 def predict_text(text, vectorizer):
     vec = vectorizer.transform([text])
     return model.predict(vec)[0]
+#Hi I'm Haton
