@@ -130,3 +130,4 @@ if st.button("🔍 تحليل المشاعر"):
 # Footer
 st.markdown("---")
 st.markdown("<p style='text-align: center;'>مشروع NLP - تحليل المشاعر العربية</p>", unsafe_allow_html=True)
+# comment
