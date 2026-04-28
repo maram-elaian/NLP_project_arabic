@@ -9,7 +9,7 @@ print(df['label'].value_counts())
 #Hi This is Haton code
 import  nltk
 from nltk.tokenize import word_tokenize
-nltk.download('punkt_tab')
+nltk.download('punkt')
 df['tokens'] = df['text'].apply(word_tokenize)
 print(df['tokens'])
 #Stop word remove
@@ -19,7 +19,10 @@ stop_word=set(stopwords.words('arabic'))
 df['filtered_tokens'] = df['tokens'].apply(
     lambda tokens: [word for word in tokens if word not in stop_word]
 )
-print(df['filtered_tokens'])
+
+df['clean_text'] = df['filtered_tokens'].apply(lambda words: " ".join(words))
+
+print(df[['text', 'clean_text']].head())
 
 import pandas as pd
 import streamlit as st
