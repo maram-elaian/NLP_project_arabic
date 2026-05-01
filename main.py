@@ -15,7 +15,7 @@ st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
     background-image:
-        linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.4)),
+        linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0)),
         url("data:image/jpg;base64,{img}");
     background-size: cover;
     background-position: center;
@@ -35,10 +35,32 @@ textarea {{
 }}
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&display=swap');
+
+    * {
+        font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    html, body {
+        font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    h1, h2, h3, p, label, span, div, textarea {
+        font-family: 'Reem Kufi', sans-serif !important;
+    }
+
+    textarea {
+        border-radius: 10px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ================= الواجهة =================
-st.markdown("<h1 style='text-align:center;'>🧠 محلل المشاعر العربي</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;'>اكتب جملة وسيتم تحليل الشعور</p>", unsafe_allow_html=True)
+st.title(" محلل المشاعر العربي")
+
+#st.markdown("<p style='text-align:center;'>اكتب جملة وسيتم تحليل الشعور</p>", unsafe_allow_html=True)
 
 user_input = st.text_area("✍️ اكتب النص هنا:")
 
