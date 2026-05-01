@@ -1,59 +1,39 @@
-import pickle
-import re
-import nltk
-from nltk.corpus import stopwords
+import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-nltk.download('stopwords')
+vectorizer = TfidfVectorizer(max_features=5000)
+model = LogisticRegression(max_iter=1000)
 
-stop_words = set(stopwords.words('arabic'))
-
-# تنظيف النص
-def clean_text(text):
-    text = str(text)
-
-    # توحيد الأحرف
-    text = re.sub(r'[إأآا]', 'ا', text)
-    text = re.sub(r'ة', 'ه', text)
-    text = re.sub(r'ى', 'ي', text)
-
-    # حذف الرموز
-    text = re.sub(r'[^\w\s]', '', text)
-
-    # حذف الأرقام
-    text = re.sub(r'\d+', '', text)
-
-    words = text.split()
-    words = [w for w in words if w not in stop_words]
-
-    return " ".join(words)
-
-# الأدوات
-vectorizer = TfidfVectorizer(ngram_range=(1,2), max_features=5000)
-model = LogisticRegression(
-    max_iter=1000,
-    class_weight='balanced'
-)
-
-# تدريب
 def train_model(texts, labels):
-    cleaned_texts = texts.apply(clean_text)
 
-    X = vectorizer.fit_transform(cleaned_texts)
-    model.fit(X, labels)
+    X = vectorizer.fit_transform(texts)
 
-    pickle.dump(model, open("model.pkl", "wb"))
-    pickle.dump(vectorizer, open("vectorizer.pkl", "wb"))
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, labels, test_size=0.2, random_state=42
+    )
 
-# تحميل
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+
+    print("🎯 Accuracy:", accuracy_score(y_test, y_pred))
+
+    joblib.dump(model, "model.pkl")
+    joblib.dump(vectorizer, "vectorizer.pkl")
+
+
+def predict_text(text):
+    model = joblib.load("model.pkl")
+    vectorizer = joblib.load("vectorizer.pkl")
+
+    X = vectorizer.transform([text])
+    return model.predict(X)[0]
+
+
 def load_model():
     global model, vectorizer
-    model = pickle.load(open("model.pkl", "rb"))
-    vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-
-# توقع
-def predict_text(text):
-    cleaned = clean_text(text)
-    X = vectorizer.transform([cleaned])
-    return model.predict(X)[0]
+    model = joblib.load("model.pkl")
+    vectorizer = joblib.load("vectorizer.pkl")
