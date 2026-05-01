@@ -1,6 +1,6 @@
 import streamlit as st
 import base64
-from model import predict_text, load_model
+from model import predict_text
 
 st.set_page_config(page_title="Arabic Emotion Detector", layout="centered")
 
@@ -27,7 +27,7 @@ st.markdown(f"""
 }}
 
 h1, p, label {{
-    color: white !important;
+    color: black !important;
 }}
 
 textarea {{
@@ -35,13 +35,6 @@ textarea {{
 }}
 </style>
 """, unsafe_allow_html=True)
-
-# ================= تحميل المودل =================
-@st.cache_resource
-def load_saved_model():
-    load_model()
-
-load_saved_model()
 
 # ================= الواجهة =================
 st.markdown("<h1 style='text-align:center;'>🧠 محلل المشاعر العربي</h1>", unsafe_allow_html=True)
@@ -53,17 +46,22 @@ if st.button("🔍 تحليل"):
     if user_input.strip() == "":
         st.warning("⚠️ الرجاء إدخال نص")
     else:
-        result = predict_text(user_input)
+        try:
+            result = predict_text(user_input)
 
-        st.markdown("## 📊 النتيجة:")
+            st.markdown("## 📊 النتيجة:")
 
-        if "غضب" in result:
-            st.error(result + " 😡")
-        elif "توتر" in result:
-            st.warning(result + " 😰")
-        elif "إحباط" in result:
-            st.info(result + " 😞")
-        elif "سخرية" in result:
-            st.success(result + " 😏")
-        else:
-            st.write(result + " 🙂")
+            if "غضب" in result:
+                st.error(result + " 😡")
+            elif "توتر" in result:
+                st.warning(result + " 😰")
+            elif "إحباط" in result:
+                st.info(result + " 😞")
+            elif "سخرية" in result:
+                st.success(result + " 😏")
+            else:
+                st.write(result + " 🙂")
+
+        except Exception as e:
+            st.error("❌ صار خطأ في التنبؤ")
+            st.write(e)
