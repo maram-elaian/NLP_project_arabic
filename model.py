@@ -15,13 +15,14 @@ nltk.download("stopwords")
 stop_words = set(stopwords.words("arabic"))
 stemmer = SnowballStemmer("arabic")
 
-vectorizer = TfidfVectorizer(max_features=5000)
-model = LogisticRegression(max_iter=1000)
+vectorizer = TfidfVectorizer(max_features=5000, ngram_range=(1, 2))
+model = LogisticRegression(C=10, max_iter=1000)
 
 
 # ================= Preprocessing =================
 def preprocess(text):
-    text = text.lower()
+    text = text.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا")
+    text = text.replace("ة", "ه")
     tokens = text.split()
 
     tokens = [t for t in tokens if t not in stop_words]
