@@ -21,7 +21,7 @@ model = LogisticRegression(max_iter=1000)
 
 # ================= Preprocessing =================
 def preprocess(text):
-    text = text.lower()
+
     tokens = text.split()
 
     tokens = [t for t in tokens if t not in stop_words]
